@@ -35,10 +35,21 @@ HoughTransform::HoughTransform(int thetaMax, int accuracy) : filter(100)
 	initAccumulator(thetaMax, accuracy);
 }
 
-
+		/*SETTERS*/
+/*-------------------------------*/
 void HoughTransform::setFilter(int new_filter) {
 	
 	this->filter = new_filter;
+}
+
+void HoughTransform::setImage(cv::Mat frame) {
+
+	this->image = frame;
+	cv::Point point;
+	points.clear();
+
+	getWhitePoints(frame);
+	initializedImg = true;
 }
 
 void HoughTransform::initAccumulator(int thetaMax, double accuracy) {
@@ -57,11 +68,18 @@ void HoughTransform::initAccumulator(int thetaMax, double accuracy) {
 	
 	initializedAccu = true;
 }
+/*-------------------------------*/
 
+
+		/*Main algoritmus*/
+/*-------------------------------*/
 std::vector<std::vector<cv::Point> > HoughTransform::findLines() {
 
 	if (!initializedAccu)
 		initAccumulator(180, 1);
+
+	/*-----------------------------------------*/
+	/*----------Fill the Accumulator------------*/
 
 	for (int i = 0; i < points.size(); i++) {
 		for (int j = 0; j < thetaMax; j++) {
@@ -70,6 +88,10 @@ std::vector<std::vector<cv::Point> > HoughTransform::findLines() {
 			accumulator[j][round(fabs(r))]++;
 		}
 	}
+
+	/*-----------------------------------------*/
+	/*----------------Find lines---------------*/
+
 	int maxValue = 0;
 
 	std::vector<int> finalR, finalTheta;
@@ -83,6 +105,8 @@ std::vector<std::vector<cv::Point> > HoughTransform::findLines() {
 		}
 	}
 
+	/*-----------------------------------------*/
+	/*-----------Compute points----------------*/
 	std::vector<std::vector<cv::Point> > lines(finalR.size());
 	
 	for (int i = 0; i < finalR.size(); i++) {
@@ -98,35 +122,14 @@ std::vector<std::vector<cv::Point> > HoughTransform::findLines() {
 		lines[i].push_back(pt1);
 		lines[i].push_back(pt2);
 	}
-
 	return lines;
 }
 
-void HoughTransform::setImage(cv::Mat frame) {
-	
-	this->image = frame;
-	cv::Point point;
-	points.clear();
-	center_x = frame.cols / 2.0;
-	center_y = frame.rows / 2.0;
+/*-------------------------------*/
 
-	getWhitePoints(frame);
-	initializedImg = true;
-}
+		/*Debug functions*/
+/*-------------------------------*/
 
-void HoughTransform::getWhitePoints(cv::Mat inputImg) {
-
-	cv::Scalar colour;
-	points.clear();
-	for (int i = 0; i < inputImg.rows; i++) {
-		for (int j = 0; j < inputImg.cols; j++) {
-			colour = inputImg.at<uchar>(i, j);
-			if (colour.val[0] == 255) {
-				points.push_back(cv::Point(i, j));
-			}
-		}
-	}
-}
 void HoughTransform::printWhitePoints() {
 
 	printf("\n FOUND WHITE POINTS\n");
@@ -145,6 +148,21 @@ void HoughTransform::drawAccumulator() {
 			finalAcumulator.at<uchar>(j,i) = accumulator[i][j];
 		}
 	}
-		imshow("ACCUMULATOR", finalAcumulator);
+	imshow("ACCUMULATOR", finalAcumulator);
+}
+/*-------------------------------*/
 
+		/*PRIVATE FUNCTION*/
+void HoughTransform::getWhitePoints(cv::Mat inputImg) {
+
+	cv::Scalar colour;
+	points.clear();
+	for (int i = 0; i < inputImg.rows; i++) {
+		for (int j = 0; j < inputImg.cols; j++) {
+			colour = inputImg.at<uchar>(i, j);
+			if (colour.val[0] == 255) {
+				points.push_back(cv::Point(i, j));
+			}
+		}
+	}
 }

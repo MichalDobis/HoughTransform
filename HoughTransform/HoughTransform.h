@@ -10,17 +10,23 @@
 class HoughTransform
 {
 public:
-	HoughTransform();
-	HoughTransform(cv::Mat image);
-	HoughTransform(int filter);
-	HoughTransform(int thetaMax, int accuracy);
+	//Constructors
+	HoughTransform();										
+	HoughTransform(cv::Mat image);							
+	HoughTransform(int filter);								
+	HoughTransform(int thetaMax, int accuracy);				
 	HoughTransform(int filter, int thetaMax, int accuracy);
 
+	//Seters
 	void setImage(cv::Mat frame);
 	void setFilter(int new_filter);
-	void printWhitePoints();
-	std::vector<std::vector<cv::Point> > findLines();
 	void initAccumulator(int maxTheta, double accuracy);
+
+	//Main algorithm - returns vector of lines (2x point)
+	std::vector<std::vector<cv::Point> > findLines();
+	
+	//Debug functions
+	void printWhitePoints();
 	void drawAccumulator();
 
 	class Hought_exception : public std::exception {
@@ -36,28 +42,28 @@ public:
 		std::string err;
 	};
 
-
 private:
 
 	const double DEG2RAD = 0.01745329;
 	const double RAD2DEG = 57.2957796;
 
 	cv::Mat image;
-	std::vector<cv::Point> points;
-	std::vector<std::vector<int> > accumulator;
 
+	//Minimum number of points from accumulator
 	int filter;
 
+	//Accumulator params
+	std::vector<std::vector<int> > accumulator;
 	int thetaMax;
 	int accuHeight;
-
-	double center_x;
-	double center_y;
 	double accuracy;
 
+	//Flags
 	bool initializedAccu;
 	bool initializedImg;
 
+	//Get the white points from cv::Mat
+	std::vector<cv::Point> points;
 	void getWhitePoints(cv::Mat inputImg);
 
 };

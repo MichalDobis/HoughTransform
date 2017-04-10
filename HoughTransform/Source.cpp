@@ -34,8 +34,11 @@ int main(int argc, char** argv) {
 		h_transform.initAccumulator(180, 1);
 		auto lines = h_transform.findLines();
 
-		for (auto i : lines)
-			line(inputImg, i[0], i[1], cv::Scalar(255, 0, 0), 3, CV_AA);
+		int change_color = 1;
+		for (auto point : lines) {
+			line(inputImg, point[0], point[1], cv::Scalar( 255 % change_color, 0, 0), 3, CV_AA);
+			change_color += 10;
+		}
 		imshow("HOUGH TRANSFORM", inputImg);
 		h_transform.drawAccumulator();
 	}

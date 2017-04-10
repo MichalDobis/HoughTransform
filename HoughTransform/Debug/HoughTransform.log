@@ -1,0 +1,4 @@
+﻿HoughTransform.obj : error LNK2019: unresolved external symbol "private: void __thiscall cv::String::deallocate(void)" (?deallocate@String@cv@@AAEXXZ) referenced in function "public: __thiscall cv::String::~String(void)" (??1String@cv@@QAE@XZ)
+Source.obj : error LNK2001: unresolved external symbol "private: void __thiscall cv::String::deallocate(void)" (?deallocate@String@cv@@AAEXXZ)
+C:\Users\Michal\Documents\opencv\build\x64\vc14\lib\opencv_world320d.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'X86'
+C:\Users\Michal\Documents\Visual Studio 2015\Projects\HoughTransform\Debug\HoughTransform.exe : fatal error LNK1120: 1 unresolved externals
